@@ -33,7 +33,7 @@ namespace ChapAppClient
         public LoginForm()
         {
             InitializeComponent();
-            this.socket = new TcpClient("192.168.31.163", 2008);
+            this.socket = new TcpClient("192.168.1.104", 2008);
             this.stream = socket.GetStream();
             this.homeForm = new HomeForm(this);
             this.registerForm = new RegisterForm(this);
@@ -194,7 +194,7 @@ namespace ChapAppClient
                         hideLoginForm();
                         this.homeForm.Show();
                         Application.Run();
-                        this.socket = new TcpClient("192.168.1.24", 2008);
+                        this.socket = new TcpClient("192.168.1.104", 2008);
                         this.stream = socket.GetStream();
                     }
                     catch (Exception e)
@@ -275,6 +275,11 @@ namespace ChapAppClient
             GetUserByName userByName = new GetUserByName() { Name = name };
             Base request = new Base() { model = "user", action = "getbyname", content = userByName.ParseToJson() };
             Send(request.ParseToJson());
+        }
+
+        public void createGroup()
+        {
+
         }
     }
 }

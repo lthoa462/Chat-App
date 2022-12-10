@@ -25,31 +25,32 @@ namespace ChapAppClient
         {
             InitializeComponent();
             this.loginFrom = loginForm;
+            dgvUsers.AllowUserToAddRows = false;
         }
 
         public void addItemForFriendListView(string name)
         {
-            if (dgvFriend.InvokeRequired)
+            if (dgvUsers.InvokeRequired)
             {
                 var dlg = new AddItemForListView(addItemForFriendListView);
                 this.Invoke(dlg, new object[] { name });
             }
             else
             {
-                dgvFriend.Rows.Add(false,name);
+                dgvUsers.Rows.Add(false, name);
             }
         }
 
         public void clearItems()
         {
-            if (dgvFriend.InvokeRequired)
+            if (dgvUsers.InvokeRequired)
             {
                 var dlg = new ClearListViewItems(clearItems);
                 this.Invoke(dlg, new object[] { });
             }
             else
             {
-                dgvFriend.Rows.Clear();
+                dgvUsers.Rows.Clear();
             }
         }
 
@@ -59,7 +60,7 @@ namespace ChapAppClient
             {
                 return;
             }
-
+            clearItems();
             loginFrom.searchUserByName(tbSearchFriend.Text);
         }
 
@@ -106,6 +107,16 @@ namespace ChapAppClient
             var item = lvGroup.SelectedItems[0];
             var group = this.loginFrom.listGr.Find(x => x.GroupName == item.Text);
 
+        }
+
+        private void tbMessage_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btCreateGroup_Click(object sender, EventArgs e)
+        {
+           
         }
     }
 }

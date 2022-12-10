@@ -39,7 +39,13 @@
             this.dgvFriend = new System.Windows.Forms.DataGridView();
             this.pickColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.colUsers = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btCreateGroup = new System.Windows.Forms.Button();
+            this.dgvUsers = new System.Windows.Forms.DataGridView();
+            this.selectUser = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.nameUser = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.userId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFriend)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvUsers)).BeginInit();
             this.SuspendLayout();
             // 
             // listView1
@@ -48,24 +54,25 @@
             this.listView1.Location = new System.Drawing.Point(240, 10);
             this.listView1.Margin = new System.Windows.Forms.Padding(2);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(689, 429);
+            this.listView1.Size = new System.Drawing.Size(689, 498);
             this.listView1.TabIndex = 0;
             this.listView1.UseCompatibleStateImageBehavior = false;
             // 
             // tbMessage
             // 
-            this.tbMessage.Location = new System.Drawing.Point(240, 443);
+            this.tbMessage.Location = new System.Drawing.Point(240, 510);
             this.tbMessage.Margin = new System.Windows.Forms.Padding(2);
             this.tbMessage.Name = "tbMessage";
             this.tbMessage.Size = new System.Drawing.Size(628, 38);
             this.tbMessage.TabIndex = 2;
             this.tbMessage.Text = "";
+            this.tbMessage.TextChanged += new System.EventHandler(this.tbMessage_TextChanged);
             // 
             // btSendMessage
             // 
             this.btSendMessage.BackColor = System.Drawing.SystemColors.MenuHighlight;
             this.btSendMessage.ForeColor = System.Drawing.SystemColors.InactiveBorder;
-            this.btSendMessage.Location = new System.Drawing.Point(872, 443);
+            this.btSendMessage.Location = new System.Drawing.Point(872, 510);
             this.btSendMessage.Margin = new System.Windows.Forms.Padding(2);
             this.btSendMessage.Name = "btSendMessage";
             this.btSendMessage.Size = new System.Drawing.Size(56, 37);
@@ -75,7 +82,7 @@
             // 
             // btApprove
             // 
-            this.btApprove.Location = new System.Drawing.Point(9, 443);
+            this.btApprove.Location = new System.Drawing.Point(8, 218);
             this.btApprove.Margin = new System.Windows.Forms.Padding(2);
             this.btApprove.Name = "btApprove";
             this.btApprove.Size = new System.Drawing.Size(110, 37);
@@ -86,7 +93,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(125, 443);
+            this.button2.Location = new System.Drawing.Point(125, 218);
             this.button2.Margin = new System.Windows.Forms.Padding(2);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(110, 37);
@@ -96,7 +103,7 @@
             // 
             // btSearch
             // 
-            this.btSearch.Location = new System.Drawing.Point(184, 218);
+            this.btSearch.Location = new System.Drawing.Point(184, 258);
             this.btSearch.Margin = new System.Windows.Forms.Padding(2);
             this.btSearch.Name = "btSearch";
             this.btSearch.Size = new System.Drawing.Size(52, 26);
@@ -107,7 +114,7 @@
             // 
             // tbSearchFriend
             // 
-            this.tbSearchFriend.Location = new System.Drawing.Point(9, 218);
+            this.tbSearchFriend.Location = new System.Drawing.Point(9, 258);
             this.tbSearchFriend.Margin = new System.Windows.Forms.Padding(2);
             this.tbSearchFriend.Name = "tbSearchFriend";
             this.tbSearchFriend.Size = new System.Drawing.Size(171, 27);
@@ -117,43 +124,86 @@
             // lvGroup
             // 
             this.lvGroup.HideSelection = false;
-            this.lvGroup.Location = new System.Drawing.Point(9, 249);
+            this.lvGroup.Location = new System.Drawing.Point(8, 10);
             this.lvGroup.Margin = new System.Windows.Forms.Padding(2);
             this.lvGroup.Name = "lvGroup";
-            this.lvGroup.Size = new System.Drawing.Size(228, 190);
+            this.lvGroup.Size = new System.Drawing.Size(228, 206);
             this.lvGroup.TabIndex = 9;
             this.lvGroup.UseCompatibleStateImageBehavior = false;
             // 
             // dgvFriend
             // 
-            this.dgvFriend.BackgroundColor = System.Drawing.SystemColors.ButtonFace;
-            this.dgvFriend.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvFriend.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.pickColumn,
-            this.colUsers});
-            this.dgvFriend.Location = new System.Drawing.Point(9, 10);
+            this.dgvFriend.Location = new System.Drawing.Point(0, 0);
             this.dgvFriend.Name = "dgvFriend";
-            this.dgvFriend.RowHeadersVisible = false;
-            this.dgvFriend.Size = new System.Drawing.Size(227, 203);
-            this.dgvFriend.TabIndex = 10;
+            this.dgvFriend.Size = new System.Drawing.Size(240, 150);
+            this.dgvFriend.TabIndex = 0;
             // 
             // pickColumn
             // 
             this.pickColumn.HeaderText = "";
+            this.pickColumn.MinimumWidth = 6;
             this.pickColumn.Name = "pickColumn";
             this.pickColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.pickColumn.Width = 125;
             // 
             // colUsers
             // 
             this.colUsers.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.colUsers.HeaderText = "Users";
+            this.colUsers.MinimumWidth = 6;
             this.colUsers.Name = "colUsers";
+            // 
+            // btCreateGroup
+            // 
+            this.btCreateGroup.Location = new System.Drawing.Point(8, 511);
+            this.btCreateGroup.Margin = new System.Windows.Forms.Padding(2);
+            this.btCreateGroup.Name = "btCreateGroup";
+            this.btCreateGroup.Size = new System.Drawing.Size(226, 37);
+            this.btCreateGroup.TabIndex = 11;
+            this.btCreateGroup.Text = "Tạo Group";
+            this.btCreateGroup.UseVisualStyleBackColor = true;
+            this.btCreateGroup.Click += new System.EventHandler(this.btCreateGroup_Click);
+            // 
+            // dgvUsers
+            // 
+            this.dgvUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvUsers.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.selectUser,
+            this.nameUser,
+            this.userId});
+            this.dgvUsers.Location = new System.Drawing.Point(8, 291);
+            this.dgvUsers.Name = "dgvUsers";
+            this.dgvUsers.RowHeadersVisible = false;
+            this.dgvUsers.Size = new System.Drawing.Size(226, 215);
+            this.dgvUsers.TabIndex = 12;
+            // 
+            // selectUser
+            // 
+            this.selectUser.HeaderText = "";
+            this.selectUser.Name = "selectUser";
+            this.selectUser.Width = 50;
+            // 
+            // nameUser
+            // 
+            this.nameUser.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.nameUser.HeaderText = "Users";
+            this.nameUser.Name = "nameUser";
+            this.nameUser.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.nameUser.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // userId
+            // 
+            this.userId.HeaderText = "UserId";
+            this.userId.Name = "userId";
+            this.userId.Visible = false;
             // 
             // HomeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(937, 488);
+            this.ClientSize = new System.Drawing.Size(937, 557);
+            this.Controls.Add(this.dgvUsers);
+            this.Controls.Add(this.btCreateGroup);
             this.Controls.Add(this.lvGroup);
             this.Controls.Add(this.tbSearchFriend);
             this.Controls.Add(this.btSearch);
@@ -168,6 +218,7 @@
             this.Text = "Home";
             this.Load += new System.EventHandler(this.HomeForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvFriend)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvUsers)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -185,5 +236,10 @@
         private System.Windows.Forms.DataGridView dgvFriend;
         private System.Windows.Forms.DataGridViewCheckBoxColumn pickColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn colUsers;
+        public System.Windows.Forms.Button btCreateGroup;
+        private System.Windows.Forms.DataGridView dgvUsers;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn selectUser;
+        private System.Windows.Forms.DataGridViewTextBoxColumn nameUser;
+        private System.Windows.Forms.DataGridViewTextBoxColumn userId;
     }
 }
