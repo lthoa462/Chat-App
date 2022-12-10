@@ -87,6 +87,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTO\AddFriendDTO.cs" />
     <Compile Include="DTO\AllGroup.cs" />
     <Compile Include="DTO\Base.cs" />
     <Compile Include="DTO\GetByGroup.cs" />

@@ -1,4 +1,5 @@
-﻿using ChatAppServer.DTO;
+﻿using ChapAppClient.DTO;
+using ChatAppServer.DTO;
 using ChatAppServer.Model;
 using ChatAppServer.ServerSocket;
 using System;
@@ -62,6 +63,13 @@ namespace ChatAppServer.Controller
                     var response = new response { action = "changepass", content = ChangePage(model).Result };
                     break;
                 }
+                case "addfriend":
+                    {
+                        var model = new AddFriendDTO().GetFromJson(json.content);
+                        var response = new response { action = "getbyname", content = SendAddFriendRequest(model).Result };
+                        from.Send(response.ParseToJson());
+                        break;
+                    }
                 default:
                     break;
             }
@@ -128,6 +136,12 @@ namespace ChatAppServer.Controller
             {
                 return "some thing went wrong, please contact your admin";
             }
+        }
+
+        private async Task<string> SendAddFriendRequest(AddFriendDTO model)
+        {
+
+            return "";
         }
     }
 }

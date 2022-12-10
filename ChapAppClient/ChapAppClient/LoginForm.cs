@@ -233,7 +233,7 @@ namespace ChapAppClient
                         {
                             for (int i = 0; i < users.Count; i++)
                             {
-                                this.homeForm.addItemForFriendListView(users[i].Name);
+                                this.homeForm.addItemForFriendListView(users[i].Name, users[i].UserId , users[i].UserName);
                             }
                         }
                     }
@@ -277,9 +277,15 @@ namespace ChapAppClient
             Send(request.ParseToJson());
         }
 
-        public void createGroup()
+        public void addFriends(string addFriendDTOJson)
         {
-
+            Base request = new Base
+            {
+                model = "user",
+                action = "addfriend",
+                content = addFriendDTOJson
+            };
+            Send(request.ParseToJson());
         }
     }
 }

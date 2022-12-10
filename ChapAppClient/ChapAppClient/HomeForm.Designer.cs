@@ -39,11 +39,11 @@
             this.dgvFriend = new System.Windows.Forms.DataGridView();
             this.pickColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.colUsers = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btCreateGroup = new System.Windows.Forms.Button();
+            this.btAddFriend = new System.Windows.Forms.Button();
             this.dgvUsers = new System.Windows.Forms.DataGridView();
-            this.selectUser = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.nameUser = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.userId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.username = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFriend)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvUsers)).BeginInit();
             this.SuspendLayout();
@@ -153,35 +153,30 @@
             this.colUsers.MinimumWidth = 6;
             this.colUsers.Name = "colUsers";
             // 
-            // btCreateGroup
+            // btAddFriend
             // 
-            this.btCreateGroup.Location = new System.Drawing.Point(8, 511);
-            this.btCreateGroup.Margin = new System.Windows.Forms.Padding(2);
-            this.btCreateGroup.Name = "btCreateGroup";
-            this.btCreateGroup.Size = new System.Drawing.Size(226, 37);
-            this.btCreateGroup.TabIndex = 11;
-            this.btCreateGroup.Text = "Tạo Group";
-            this.btCreateGroup.UseVisualStyleBackColor = true;
-            this.btCreateGroup.Click += new System.EventHandler(this.btCreateGroup_Click);
+            this.btAddFriend.Location = new System.Drawing.Point(8, 511);
+            this.btAddFriend.Margin = new System.Windows.Forms.Padding(2);
+            this.btAddFriend.Name = "btAddFriend";
+            this.btAddFriend.Size = new System.Drawing.Size(226, 37);
+            this.btAddFriend.TabIndex = 11;
+            this.btAddFriend.Text = "Kết bạn";
+            this.btAddFriend.UseVisualStyleBackColor = true;
+            this.btAddFriend.Click += new System.EventHandler(this.btAddFriend_Click);
             // 
             // dgvUsers
             // 
             this.dgvUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvUsers.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.selectUser,
             this.nameUser,
-            this.userId});
+            this.userId,
+            this.username});
             this.dgvUsers.Location = new System.Drawing.Point(8, 291);
             this.dgvUsers.Name = "dgvUsers";
             this.dgvUsers.RowHeadersVisible = false;
-            this.dgvUsers.Size = new System.Drawing.Size(226, 215);
+            this.dgvUsers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvUsers.Size = new System.Drawing.Size(226, 217);
             this.dgvUsers.TabIndex = 12;
-            // 
-            // selectUser
-            // 
-            this.selectUser.HeaderText = "";
-            this.selectUser.Name = "selectUser";
-            this.selectUser.Width = 50;
             // 
             // nameUser
             // 
@@ -197,13 +192,18 @@
             this.userId.Name = "userId";
             this.userId.Visible = false;
             // 
+            // username
+            // 
+            this.username.HeaderText = "username";
+            this.username.Name = "username";
+            // 
             // HomeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(937, 557);
             this.Controls.Add(this.dgvUsers);
-            this.Controls.Add(this.btCreateGroup);
+            this.Controls.Add(this.btAddFriend);
             this.Controls.Add(this.lvGroup);
             this.Controls.Add(this.tbSearchFriend);
             this.Controls.Add(this.btSearch);
@@ -236,10 +236,10 @@
         private System.Windows.Forms.DataGridView dgvFriend;
         private System.Windows.Forms.DataGridViewCheckBoxColumn pickColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn colUsers;
-        public System.Windows.Forms.Button btCreateGroup;
+        public System.Windows.Forms.Button btAddFriend;
         private System.Windows.Forms.DataGridView dgvUsers;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn selectUser;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameUser;
         private System.Windows.Forms.DataGridViewTextBoxColumn userId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn username;
     }
 }
