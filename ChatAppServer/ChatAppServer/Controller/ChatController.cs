@@ -65,8 +65,8 @@ namespace ChatAppServer.Controller
         {
             try
             {
-                var mess = _context.ChatMessages.Where(x => x.GroupId == model.GroupID).ToList();
-                var allmess = new AllMess { chatMessages = mess };
+                var mess = _context.ChatMessages.Where(x => x.GroupId == model.GroupID).OrderBy(x => x.CreatedBy).ThenByDescending(x => x.CreatedDate);
+                var allmess = new AllMess { chatMessages = mess.ToList() };
                 if(mess!=null)
                 {
                     var json = JsonSerializer.Serialize(allmess);
