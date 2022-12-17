@@ -5,9 +5,9 @@ namespace ChapAppClient.DTO
 {
     public class AddFriendDTO
     {
-        public Guid userId;
-        public string userName;
-        public string name;
+        public Guid userId { get; set; }
+        public string userName { get; set; }
+        public string name { get; set; }
 
         public string ParseToJson()
         {

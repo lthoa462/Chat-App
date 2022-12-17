@@ -65,7 +65,7 @@ namespace ChatAppServer.Controller
                 }
                 case "addfriend":
                     {
-                        var model = new AddFriendDTO().GetFromJson(json.content);
+                        var model = JsonSerializer.Deserialize<AddFriendRequestDTO>(json.content);
                         var response = new response { action = "getbyname", content = SendAddFriendRequest(model).Result };
                         from.Send(response.ParseToJson());
                         break;
@@ -77,13 +77,14 @@ namespace ChatAppServer.Controller
 
         private async Task<string> Login(Login model)
         {
-            if (!_context.ChatUsers.Any(x => x.UserName == model.UserName))
-                return "Your username or password was wrong!";
+            var user = await _context.ChatUsers.FirstOrDefaultAsync(x => x.UserName == model.UserName && x.Password == model.Password);
+            if (user == null)
+            {
+                return "login failed";
+            }
             else
             {
-                if (!_context.ChatUsers.Any(x => x.UserName == model.UserName))
-                    return "Your username or password was wrong!";
-                return _context.ChatUsers.First(x => x.UserName == model.UserName).ParseToJson();
+                return user.ParseToJson();
             }
         }
 
@@ -138,10 +139,76 @@ namespace ChatAppServer.Controller
             }
         }
 
-        private async Task<string> SendAddFriendRequest(AddFriendDTO model)
+        private async Task<string> SendAddFriendRequest(AddFriendRequestDTO model)
+        {
+            if(model.members.Count == 1)
+            {
+                var requestUser = await _context.ChatUsers.FirstOrDefaultAsync(u => u.UserId == model.userRequestId);
+                List<GroupUser> groupUsers = await _context.GroupUsers
+                                            .Where(x => x.UserId == model.userRequestId || x.UserId == model.members.ElementAt(0).userId)
+                                            .ToListAsync();
+                if(groupUsers.GroupBy(x => x.GroupId).Any(group => group.Count() == 2)){
+                    return $"{model.members.ElementAt(0).name} is friend already";
+                }else
+                {
+                    ChatGroup newGroup = new ChatGroup();
+                    newGroup.GroupId = Guid.NewGuid();
+                    newGroup.CreatedBy = model.userRequestId;
+                    newGroup.CreatedDate = DateTime.Now;
+                    newGroup.GroupName = $"{model.members.ElementAt(0).name + "," + requestUser.Name}";
+
+                    _context.ChatGroups.Add(newGroup);
+                    _context.GroupUsers.Add(new GroupUser
+                    {
+                        GroupId = newGroup.GroupId,
+                        UserId = model.userRequestId,
+                        isApprove = true
+                    });
+                    _context.GroupUsers.Add(new GroupUser
+                    {
+                        GroupId = newGroup.GroupId,
+                        UserId = model.members.ElementAt(0).userId,
+                        isApprove = true
+                    });
+                    InviteUser(model.members.ElementAt(0));
+                    await _context.SaveChangesAsync();
+                    return JsonSerializer.Serialize(newGroup);
+                }
+            }else
+            {
+                ChatGroup newGroup = new ChatGroup();
+                newGroup.GroupId = Guid.NewGuid();
+                newGroup.CreatedBy = model.userRequestId;
+                newGroup.CreatedDate = DateTime.Now;
+                List<string> memberNames = new List<string>();
+
+                _context.GroupUsers.Add(new GroupUser
+                {
+                    GroupId = newGroup.GroupId,
+                    UserId = model.userRequestId,
+                    isApprove = true
+                });
+                foreach (AddFriendDTO user in model.members)
+                {
+                    _context.GroupUsers.Add(new GroupUser
+                    {
+                        GroupId = newGroup.GroupId,
+                        UserId = user.userId,
+                        isApprove = true
+                    });
+                    memberNames.Add(user.name);
+                    InviteUser(user);
+                }
+                newGroup.GroupName = String.Join(",", memberNames);
+                _context.ChatGroups.Add(newGroup);
+                await _context.SaveChangesAsync();
+                return JsonSerializer.Serialize(newGroup);
+            }
+        }
+
+        private void InviteUser(AddFriendDTO user)
         {
 
-            return "";
         }
     }
 }

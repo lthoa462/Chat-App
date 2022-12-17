@@ -133,8 +133,7 @@ namespace ChapAppClient
                     userName = (string)dgvUsers.SelectedRows[i].Cells[2].Value
                 });
             }
-            var dtoJson = JsonSerializer.Serialize(dto);
-            this.loginFrom.addFriends(dtoJson);
+            this.loginFrom.addFriends(dto);
         }
     }
 }

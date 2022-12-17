@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Windows.Forms;
+using ChapAppClient.DTO;
 using ChatAppServer.DTO;
 using ChatAppServer.Model;
 using static System.Net.Mime.MediaTypeNames;
@@ -33,7 +34,7 @@ namespace ChapAppClient
         public LoginForm()
         {
             InitializeComponent();
-            this.socket = new TcpClient("192.168.1.104", 2008);
+            this.socket = new TcpClient("172.16.0.18", 2008);
             this.stream = socket.GetStream();
             this.homeForm = new HomeForm(this);
             this.registerForm = new RegisterForm(this);
@@ -277,13 +278,19 @@ namespace ChapAppClient
             Send(request.ParseToJson());
         }
 
-        public void addFriends(string addFriendDTOJson)
+        public void addFriends(List<AddFriendDTO> dto)
         {
+            AddFriendRequestDTO requestDTO = new AddFriendRequestDTO()
+            {
+                members = dto,
+                userRequestId = this.user.UserId
+            };
+            var dtoJson = JsonSerializer.Serialize(requestDTO);
             Base request = new Base
             {
                 model = "user",
                 action = "addfriend",
-                content = addFriendDTOJson
+                content = dtoJson
             };
             Send(request.ParseToJson());
         }

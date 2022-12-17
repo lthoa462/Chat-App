@@ -90,6 +90,7 @@
     <Compile Include="Controller\GroupController.cs" />
     <Compile Include="Controller\UserController.cs" />
     <Compile Include="DTO\AddFriendDTO.cs" />
+    <Compile Include="DTO\AddFriendRequestDTO.cs" />
     <Compile Include="DTO\AddMember.cs" />
     <Compile Include="DTO\AllGroup.cs" />
     <Compile Include="DTO\ChangePass.cs" />
