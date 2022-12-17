@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Windows.Forms;
+using ChapAppClient.DTO;
 using ChatAppServer.DTO;
 using ChatAppServer.Model;
 using static System.Net.Mime.MediaTypeNames;
@@ -33,7 +34,7 @@ namespace ChapAppClient
         public LoginForm()
         {
             InitializeComponent();
-            this.socket = new TcpClient("192.168.31.163", 2008);
+            this.socket = new TcpClient("172.16.0.18", 2008);
             this.stream = socket.GetStream();
             this.homeForm = new HomeForm(this);
             this.registerForm = new RegisterForm(this);
@@ -194,7 +195,7 @@ namespace ChapAppClient
                         hideLoginForm();
                         this.homeForm.Show();
                         Application.Run();
-                        this.socket = new TcpClient("192.168.1.24", 2008);
+                        this.socket = new TcpClient("192.168.1.104", 2008);
                         this.stream = socket.GetStream();
                     }
                     catch (Exception e)
@@ -233,7 +234,7 @@ namespace ChapAppClient
                         {
                             for (int i = 0; i < users.Count; i++)
                             {
-                                this.homeForm.addItemForFriendListView(users[i].Name);
+                                this.homeForm.addItemForFriendListView(users[i].Name, users[i].UserId , users[i].UserName);
                             }
                         }
                     }
@@ -274,6 +275,23 @@ namespace ChapAppClient
         {
             GetUserByName userByName = new GetUserByName() { Name = name };
             Base request = new Base() { model = "user", action = "getbyname", content = userByName.ParseToJson() };
+            Send(request.ParseToJson());
+        }
+
+        public void addFriends(List<AddFriendDTO> dto)
+        {
+            AddFriendRequestDTO requestDTO = new AddFriendRequestDTO()
+            {
+                members = dto,
+                userRequestId = this.user.UserId
+            };
+            var dtoJson = JsonSerializer.Serialize(requestDTO);
+            Base request = new Base
+            {
+                model = "user",
+                action = "addfriend",
+                content = dtoJson
+            };
             Send(request.ParseToJson());
         }
     }

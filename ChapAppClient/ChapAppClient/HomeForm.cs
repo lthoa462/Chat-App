@@ -1,4 +1,5 @@
-﻿using ChatAppServer.DTO;
+﻿using ChapAppClient.DTO;
+using ChatAppServer.DTO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,6 +8,7 @@ using System.Data.SqlTypes;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -14,7 +16,7 @@ namespace ChapAppClient
 {
     public partial class HomeForm : Form
     {
-        private delegate void AddItemForListView(string name);
+        private delegate void AddItemForListView(string name , Guid userId,string username);
 
         private delegate void ClearListViewItems();
 
@@ -25,31 +27,32 @@ namespace ChapAppClient
         {
             InitializeComponent();
             this.loginFrom = loginForm;
+            dgvUsers.AllowUserToAddRows = false;
         }
 
-        public void addItemForFriendListView(string name)
+        public void addItemForFriendListView(string name , Guid userId, string username)
         {
-            if (dgvFriend.InvokeRequired)
+            if (dgvUsers.InvokeRequired)
             {
                 var dlg = new AddItemForListView(addItemForFriendListView);
-                this.Invoke(dlg, new object[] { name });
+                this.Invoke(dlg, new object[] { name , userId , username });
             }
             else
             {
-                dgvFriend.Rows.Add(false,name);
+                dgvUsers.Rows.Add(name, userId , username);
             }
         }
 
         public void clearItems()
         {
-            if (dgvFriend.InvokeRequired)
+            if (dgvUsers.InvokeRequired)
             {
                 var dlg = new ClearListViewItems(clearItems);
                 this.Invoke(dlg, new object[] { });
             }
             else
             {
-                dgvFriend.Rows.Clear();
+                dgvUsers.Rows.Clear();
             }
         }
 
@@ -59,7 +62,7 @@ namespace ChapAppClient
             {
                 return;
             }
-
+            clearItems();
             loginFrom.searchUserByName(tbSearchFriend.Text);
         }
 
@@ -106,6 +109,31 @@ namespace ChapAppClient
             var item = lvGroup.SelectedItems[0];
             var group = this.loginFrom.listGr.Find(x => x.GroupName == item.Text);
 
+        }
+
+        private void tbMessage_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btAddFriend_Click(object sender, EventArgs e)
+        {
+            Int32 rowsCount = dgvUsers.SelectedRows.Count;
+            if(rowsCount <= 0)
+            {
+                return;
+            }
+            List<AddFriendDTO> dto = new List<AddFriendDTO>();
+            for(int i = 0;i < rowsCount; i++)
+            {
+                dto.Add(new AddFriendDTO
+                {
+                    name = (string)dgvUsers.SelectedRows[i].Cells[0].Value,
+                    userId = (Guid)dgvUsers.SelectedRows[i].Cells[1].Value,
+                    userName = (string)dgvUsers.SelectedRows[i].Cells[2].Value
+                });
+            }
+            this.loginFrom.addFriends(dto);
         }
     }
 }
