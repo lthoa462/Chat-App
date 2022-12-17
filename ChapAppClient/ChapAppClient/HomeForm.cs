@@ -1,4 +1,6 @@
-﻿using ChatAppServer.DTO;
+﻿using ChapAppClient.DTO;
+using ChatAppServer.DTO;
+using ChatAppServer.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,7 +21,9 @@ namespace ChapAppClient
         private delegate void ClearListViewItems();
 
         private delegate void SetTextDelegate(List<string> text);
+        private delegate void SetTextDelegateLvMess(AllMess text);
         private LoginForm loginFrom;
+        public string grName;
 
         public HomeForm(LoginForm loginForm)
         {
@@ -37,6 +41,29 @@ namespace ChapAppClient
             else
             {
                 dgvFriend.Rows.Add(false,name);
+            }
+        }
+        public void addItemForlvChat(AllMess mess)
+        {
+            if (lvChat.InvokeRequired)
+            {
+                var dlg = new SetTextDelegateLvMess(addItemForlvChat);
+                lvChat.Invoke(dlg, new object[] { mess });
+            }
+            else
+            {
+                lvChat.Clear();
+                foreach(var item in mess.chatMessages)
+                {
+                    var dlv = new ListViewItem("");
+                    if (item.CreatedBy == this.loginFrom.user.UserId)
+                    {
+                        dlv.Text = item.Content;
+                    }
+                    else dlv.Text = item.Content;
+                    lvChat.Items.Add(dlv);
+                }
+                
             }
         }
 
@@ -77,6 +104,7 @@ namespace ChapAppClient
             }
             else
             {
+                lvGroup.Clear();
                 lvGroup.Items.Clear();
                 lvGroup.Columns.Add("Group", -2, HorizontalAlignment.Center);
                 lvGroup.FullRowSelect = true;
@@ -85,10 +113,10 @@ namespace ChapAppClient
                 foreach(var item in text)
                 {
                     var lvi = new ListViewItem(item);
+                    lvi.Tag = item;
                     lvGroup.Items.Add(lvi);
                 }
                 lvGroup.Focus();
-                lvGroup.Items[0].Selected = true;
 
             }
         }
@@ -103,9 +131,19 @@ namespace ChapAppClient
 
         private void lvGroup_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var item = lvGroup.SelectedItems[0];
-            var group = this.loginFrom.listGr.Find(x => x.GroupName == item.Text);
+            var item = lvGroup.SelectedItems[0].Tag.ToString();
+            grName = item;
+            var group = this.loginFrom.listGr.Find(x => x.GroupName == item);
+            var request = new Base { action = "getallmess", model = "chat", content = new GetByGroup { GroupID = group.GroupId }.ParseToJson() };
+            this.loginFrom.Send(request.ParseToJson());
+        }
 
+        private void btSendMessage_Click(object sender, EventArgs e)
+        {
+            var messContent = tbMessage.Text;
+            var mess = new ChatMessage { Content = messContent, GroupId = this.loginFrom.listGr.Find(x => x.GroupName == grName).GroupId, CreatedBy = this.loginFrom.user.UserId, CreatedDate = DateTime.Now, MessageId = Guid.NewGuid() };
+            var request = new Base { action = "send", model = "chat", content = mess.ParseToJson() };
+            this.loginFrom.Send(request.ParseToJson());
         }
     }
 }

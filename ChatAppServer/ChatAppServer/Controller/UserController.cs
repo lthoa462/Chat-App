@@ -21,16 +21,15 @@ namespace ChatAppServer.Controller
             _context = new Context();
         }
 
-        public void UserHandler(Base json, List<Worker> workers, Worker from)
+        public async void UserHandler(Base json, List<Worker> workers, Worker from)
         {
             switch (json.action.ToLower())
             {
                 case "login":
                 {
                     var model = new Login().GetFromJson(json.content);
-                    var response = new response { action = "login", content = Login(model).Result };
+                    var response = new response { action = "login", content =await Login(model, from) };
                     from.Send(response.ParseToJson());
-                    from.Username = model.UserName;
                     break;
                 }
                 case "register":
@@ -67,15 +66,17 @@ namespace ChatAppServer.Controller
             }
         }
 
-        private async Task<string> Login(Login model)
+        private async Task<string> Login(Login model,  Worker from)
         {
             if (!_context.ChatUsers.Any(x => x.UserName == model.UserName))
                 return "Your username or password was wrong!";
             else
             {
-                if (!_context.ChatUsers.Any(x => x.UserName == model.UserName))
+                if (!_context.ChatUsers.Any(x => x.Password == model.Password))
                     return "Your username or password was wrong!";
-                return _context.ChatUsers.First(x => x.UserName == model.UserName).ParseToJson();
+                var user =await _context.ChatUsers.FirstAsync(x => x.UserName == model.UserName);
+                    from.Username = user.UserId;
+                    return user.ParseToJson();
             }
         }
 

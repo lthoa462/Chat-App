@@ -26,9 +26,9 @@ namespace ChatAppServer.Model
 
         public virtual ChatUser ChatUser { get; set; }
 
-        public string ParseToJson(object obj)
+        public string ParseToJson()
         {
-            return JsonSerializer.Serialize(obj);
+            return JsonSerializer.Serialize(this);
         }
         public ChatMessage GetFromJson(string json)
         {

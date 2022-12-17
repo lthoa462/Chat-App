@@ -15,7 +15,7 @@ namespace ChatAppServer.ServerSocket
         public event EventHandler Disconnected;
         private readonly TcpClient socket;
         private readonly Stream stream;
-        public string Username { get;  set; } = null;
+        public Guid? Username { get;  set; } 
 
         public Worker(TcpClient socket)
         {

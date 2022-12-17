@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.lvChat = new System.Windows.Forms.ListView();
             this.tbMessage = new System.Windows.Forms.RichTextBox();
             this.btSendMessage = new System.Windows.Forms.Button();
             this.btApprove = new System.Windows.Forms.Button();
@@ -42,15 +42,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvFriend)).BeginInit();
             this.SuspendLayout();
             // 
-            // listView1
+            // lvChat
             // 
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(240, 10);
-            this.listView1.Margin = new System.Windows.Forms.Padding(2);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(689, 429);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.lvChat.HideSelection = false;
+            this.lvChat.Location = new System.Drawing.Point(240, 10);
+            this.lvChat.Margin = new System.Windows.Forms.Padding(2);
+            this.lvChat.Name = "lvChat";
+            this.lvChat.Size = new System.Drawing.Size(689, 429);
+            this.lvChat.TabIndex = 0;
+            this.lvChat.UseCompatibleStateImageBehavior = false;
             // 
             // tbMessage
             // 
@@ -72,6 +72,7 @@
             this.btSendMessage.TabIndex = 3;
             this.btSendMessage.Text = "Send";
             this.btSendMessage.UseVisualStyleBackColor = false;
+            this.btSendMessage.Click += new System.EventHandler(this.btSendMessage_Click);
             // 
             // btApprove
             // 
@@ -123,6 +124,7 @@
             this.lvGroup.Size = new System.Drawing.Size(228, 190);
             this.lvGroup.TabIndex = 9;
             this.lvGroup.UseCompatibleStateImageBehavior = false;
+            this.lvGroup.SelectedIndexChanged += new System.EventHandler(this.lvGroup_SelectedIndexChanged);
             // 
             // dgvFriend
             // 
@@ -161,7 +163,7 @@
             this.Controls.Add(this.btApprove);
             this.Controls.Add(this.btSendMessage);
             this.Controls.Add(this.tbMessage);
-            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.lvChat);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "HomeForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -174,7 +176,7 @@
 
         #endregion
 
-        public System.Windows.Forms.ListView listView1;
+        public System.Windows.Forms.ListView lvChat;
         public System.Windows.Forms.RichTextBox tbMessage;
         public System.Windows.Forms.Button btSendMessage;
         public System.Windows.Forms.Button btApprove;
