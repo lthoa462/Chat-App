@@ -83,11 +83,8 @@ namespace ChatAppServer.Controller
             }
             else
             {
-                if (!_context.ChatUsers.Any(x => x.Password == model.Password))
-                    return "Your username or password was wrong!";
-                var user =await _context.ChatUsers.FirstAsync(x => x.UserName == model.UserName);
-                    from.Username = user.UserId;
-                    return user.ParseToJson();
+                from.Username = user.UserId;
+                return user.ParseToJson();
             }
         }
 
