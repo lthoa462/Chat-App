@@ -8,10 +8,8 @@ using System.Text.Json;
 using System.Threading;
 using System.Windows.Forms;
 using ChapAppClient.DTO;
-using ChapAppClient.DTO;
 using ChatAppServer.DTO;
 using ChatAppServer.Model;
-using static System.Net.Mime.MediaTypeNames;
 using Application = System.Windows.Forms.Application;
 
 namespace ChapAppClient
@@ -258,18 +256,21 @@ namespace ChapAppClient
                         listGr = new AllGroup().GetFromJson(response.content).list;
                         if (listGr.Count!=0)
                         {
-                            var listItem = listGr.Select(x => x.GroupName).ToList();
-                            this.homeForm.SetTextToLvGroup(listItem);
+                            //var listItem = listGr.Select(x => x.GroupName).ToList();
+                            this.homeForm.SetTextToLvGroup(listGr);
                         }
                     }
                     break;
                 case "getallmess":
                     {
                         var listMess = new AllMess().GetFromJson(response.content);
-                        //listMess.chatMessages.Sort();
                         this.homeForm.addItemForlvChat(listMess);
                     } break;
                 case "newmess":
+                    {
+
+                    }
+                    break;
                 default:
                     break;
             }

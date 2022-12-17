@@ -3,14 +3,6 @@ using ChatAppServer.DTO;
 using ChatAppServer.Model;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.SqlTypes;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ChapAppClient
@@ -21,7 +13,7 @@ namespace ChapAppClient
 
         private delegate void ClearListViewItems();
 
-        private delegate void SetTextDelegate(List<string> text);
+        private delegate void SetTextDelegate(List<ChatGroup> text);
         private delegate void SetTextDelegateLvMess(AllMess text);
         private LoginForm loginFrom;
         public string grName;
@@ -47,23 +39,17 @@ namespace ChapAppClient
         }
         public void addItemForlvChat(AllMess mess)
         {
-            if (lvChat.InvokeRequired)
+            if (dgvMessages.InvokeRequired)
             {
                 var dlg = new SetTextDelegateLvMess(addItemForlvChat);
-                lvChat.Invoke(dlg, new object[] { mess });
+                dgvMessages.Invoke(dlg, new object[] { mess });
             }
             else
             {
-                lvChat.Clear();
+                dgvMessages.Rows.Clear();
                 foreach(var item in mess.chatMessages)
                 {
-                    var dlv = new ListViewItem("");
-                    if (item.CreatedBy == this.loginFrom.user.UserId)
-                    {
-                        dlv.Text = item.Content;
-                    }
-                    else dlv.Text = item.Content;
-                    lvChat.Items.Add(dlv);
+                    dgvMessages.Rows.Add("",item.Content,item.CreatedDate.ToString());
                 }
                 
             }
@@ -95,31 +81,25 @@ namespace ChapAppClient
         private void HomeForm_Load(object sender, EventArgs e)
         {
             this.loginFrom.Start();
+            var user = this.loginFrom.user;
+            var request = new Base { action = "getall", model = "group", content = new GetGroupByUser { userID = user.UserId }.ParseToJson() };
+            this.loginFrom.Send(request.ParseToJson());
         }
 
-        public void SetTextToLvGroup(List<string> text)
+        public void SetTextToLvGroup(List<ChatGroup> chatGroups)
         {
-            if (lvGroup.InvokeRequired)
+            if (dgvGroups.InvokeRequired)
             {
                 var dlg = new SetTextDelegate(SetTextToLvGroup);
-                lvGroup.Invoke(dlg, new object[] { text });
+                dgvGroups.Invoke(dlg, new object[] { chatGroups });
             }
             else
             {
-                lvGroup.Clear();
-                lvGroup.Items.Clear();
-                lvGroup.Columns.Add("Group", -2, HorizontalAlignment.Center);
-                lvGroup.FullRowSelect = true;
-                lvGroup.GridLines = true;
-                lvGroup.View = System.Windows.Forms.View.List;
-                foreach(var item in text)
+                dgvGroups.Rows.Clear();
+                foreach(var item in chatGroups)
                 {
-                    var lvi = new ListViewItem(item);
-                    lvi.Tag = item;
-                    lvGroup.Items.Add(lvi);
+                    dgvGroups.Rows.Add(item.GroupId,item.GroupName);
                 }
-                lvGroup.Focus();
-
             }
         }
 
@@ -131,22 +111,14 @@ namespace ChapAppClient
             this.loginFrom.Send(request.ParseToJson());
         }
 
-        private void lvGroup_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var item = lvGroup.SelectedItems[0].Tag.ToString();
-            grName = item;
-            var group = this.loginFrom.listGr.Find(x => x.GroupName == item);
-            var request = new Base { action = "getallmess", model = "chat", content = new GetByGroup { GroupID = group.GroupId }.ParseToJson() };
-            this.loginFrom.Send(request.ParseToJson());
-        }
-
-
         private void btSendMessage_Click(object sender, EventArgs e)
         {
             var messContent = tbMessage.Text;
             var mess = new ChatMessage { Content = messContent, GroupId = this.loginFrom.listGr.Find(x => x.GroupName == grName).GroupId, CreatedBy = this.loginFrom.user.UserId, CreatedDate = DateTime.Now, MessageId = Guid.NewGuid() };
             var request = new Base { action = "send", model = "chat", content = mess.ParseToJson() };
             this.loginFrom.Send(request.ParseToJson());
+            tbMessage.Text = "";
+            dgvMessages.Rows.Add("",messContent , DateTime.Now);
         }
 
         private void btAddFriend_Click(object sender, EventArgs e)
@@ -167,6 +139,13 @@ namespace ChapAppClient
                 });
             }
             this.loginFrom.addFriends(dto);
+        }
+
+        private void dgvGroups_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var groupId = (Guid)dgvGroups.Rows[e.RowIndex].Cells[0].Value;
+            var request = new Base { action = "getallmess", model = "chat", content = new GetByGroup { GroupID = groupId }.ParseToJson() };
+            this.loginFrom.Send(request.ParseToJson());
         }
     }
 }
