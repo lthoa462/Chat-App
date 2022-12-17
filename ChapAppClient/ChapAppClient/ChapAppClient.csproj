@@ -90,6 +90,7 @@
     <Compile Include="DTO\AddFriendDTO.cs" />
     <Compile Include="DTO\AddFriendRequestDTO.cs" />
     <Compile Include="DTO\AllGroup.cs" />
+    <Compile Include="DTO\AllMess.cs" />
     <Compile Include="DTO\Base.cs" />
     <Compile Include="DTO\GetByGroup.cs" />
     <Compile Include="DTO\GetGroupByUser.cs" />

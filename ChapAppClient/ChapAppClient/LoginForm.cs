@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Windows.Forms;
 using ChapAppClient.DTO;
+using ChapAppClient.DTO;
 using ChatAppServer.DTO;
 using ChatAppServer.Model;
 using static System.Net.Mime.MediaTypeNames;
@@ -34,12 +35,8 @@ namespace ChapAppClient
         public LoginForm()
         {
             InitializeComponent();
-            this.socket = new TcpClient("172.16.0.18", 2008);
-            this.stream = socket.GetStream();
             this.homeForm = new HomeForm(this);
             this.registerForm = new RegisterForm(this);
-            Start();
-            Send("");
         }
 
         private void btnDangNhap_Click(object sender, EventArgs e)
@@ -55,11 +52,22 @@ namespace ChapAppClient
                 lbWarning.Text = "Vui lòng nhập IP server";
                 return;
             }
+            try
+            {
+                this.socket = new TcpClient(tbServer.Text, 2008);
+                this.stream = socket.GetStream();
+                new Thread(Run) { IsBackground = true }.Start();
 
-            Login account = new Login() { UserName = tbUsername.Text, Password = tbPassword.Text };
+                Login account = new Login() { UserName = tbUsername.Text, Password = tbPassword.Text };
 
-            Base request = new Base() { action = "login", model = "user", content = account.ParseToJson() };
-            Send(request.ParseToJson());
+                Base request = new Base() { action = "login", model = "user", content = account.ParseToJson() };
+                Send(request.ParseToJson());
+            } catch(Exception ex)
+            {
+                lbWarning.Text = "Không tìm thấy server";
+                return;
+            }
+           
         }
 
         private void btnDangky_Click(object sender, EventArgs e)
@@ -254,6 +262,13 @@ namespace ChapAppClient
                         }
                     }
                     break;
+                case "getallmess":
+                    {
+                        var listMess = new AllMess().GetFromJson(response.content);
+                        listMess.chatMessages.Sort();
+                        this.homeForm.addItemForlvChat(listMess);
+                    } break;
+                case "newmess":
                 default:
                     break;
             }

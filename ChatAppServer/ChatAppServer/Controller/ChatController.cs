@@ -44,11 +44,13 @@ namespace ChatAppServer.Controller
             try
             {
                 var groupUsers = _context.GroupUsers.Where(x => x.GroupId == mess.GroupId).ToList();
-                var message = new Base { action = "newmess", model = "chat", content = mess.ParseToJson() };
+                mess.ChatGroup = _context.ChatGroups.First(x => x.GroupId == mess.GroupId);
+                mess.ChatUser = _context.ChatUsers.First(x => x.UserId == mess.CreatedBy);
+                var message = new response { action = "newmess", content = mess.ParseToJson() };
                 _context.ChatMessages.Add(mess);
                 foreach (var user in groupUsers)
                 {
-                    if (workers.Any(x => x.Username == mess.ChatUser.Name)) workers.First(x => x.Username == mess.ChatUser.Name).Send(message.ParseToJson());
+                    if ((workers.Any(x => x.Username == user.UserId)) && user.UserId!=mess.CreatedBy) workers.First(x => x.Username == user.UserId).Send(message.ParseToJson());
                 }
                 await _context.SaveChangesAsync();
                 return true;
@@ -64,9 +66,10 @@ namespace ChatAppServer.Controller
             try
             {
                 var mess = _context.ChatMessages.Where(x => x.GroupId == model.GroupID).ToList();
+                var allmess = new AllMess { chatMessages = mess };
                 if(mess!=null)
                 {
-                    var json = JsonSerializer.Serialize(mess);
+                    var json = JsonSerializer.Serialize(allmess);
                     return json;
                 }
                 return null;
