@@ -66,7 +66,6 @@
             this.tbMessage.Size = new System.Drawing.Size(628, 38);
             this.tbMessage.TabIndex = 2;
             this.tbMessage.Text = "";
-            this.tbMessage.TextChanged += new System.EventHandler(this.tbMessage_TextChanged);
             // 
             // btSendMessage
             // 

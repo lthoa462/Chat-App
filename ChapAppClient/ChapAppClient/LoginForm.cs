@@ -170,11 +170,12 @@ namespace ChapAppClient
 
         private void Run()
         {
-            byte[] buffer = new byte[2048];
+            byte[] buffer;
             try
             {
                 while (true)
                 {
+                    buffer = new byte[socket.ReceiveBufferSize];
                     int receivedBytes = stream.Read(buffer, 0, buffer.Length);
                     if (receivedBytes < 1) break;
                     string response = Encoding.UTF8.GetString(buffer, 0, receivedBytes);
@@ -265,7 +266,7 @@ namespace ChapAppClient
                 case "getallmess":
                     {
                         var listMess = new AllMess().GetFromJson(response.content);
-                        listMess.chatMessages.Sort();
+                        //listMess.chatMessages.Sort();
                         this.homeForm.addItemForlvChat(listMess);
                     } break;
                 case "newmess":

@@ -6,6 +6,7 @@ namespace ChatAppServer.Model
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
     using System.Text.Json;
+    using System.Text.Json.Serialization;
 
     [Table("ChatMessage")]
     public partial class ChatMessage
@@ -21,9 +22,9 @@ namespace ChatAppServer.Model
 
         [Required]
         public string Content { get; set; }
-
+        [JsonIgnore]
         public virtual ChatGroup ChatGroup { get; set; }
-
+        [JsonIgnore]
         public virtual ChatUser ChatUser { get; set; }
 
         public string ParseToJson()

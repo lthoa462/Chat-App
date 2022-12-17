@@ -6,6 +6,7 @@ namespace ChatAppServer.Model
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
     using System.Text.Json;
+    using System.Text.Json.Serialization;
 
     [Table("ChatUser")]
     public partial class ChatUser
@@ -36,12 +37,15 @@ namespace ChatAppServer.Model
         public string Address { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [JsonIgnore]
         public virtual ICollection<ChatGroup> ChatGroups { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [JsonIgnore]
         public virtual ICollection<ChatMessage> ChatMessages { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        [JsonIgnore]
         public virtual ICollection<ChatGroup> ChatGroups1 { get; set; }
 
         public string ParseToJson()
