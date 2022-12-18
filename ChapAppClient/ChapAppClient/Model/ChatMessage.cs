@@ -19,6 +19,7 @@ namespace ChatAppServer.Model
         public DateTime CreatedDate { get; set; }
 
         public Guid? GroupId { get; set; }
+        public string sendBy { get; set; }
 
         [Required]
         public string Content { get; set; }

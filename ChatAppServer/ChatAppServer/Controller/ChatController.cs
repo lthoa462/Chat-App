@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ChatAppServer.Controller
@@ -29,6 +30,7 @@ namespace ChatAppServer.Controller
                     break;
                 case "getallmess":
                     {
+                        Thread.Sleep(1000);
                         var model = new GetByGroup().GetFromJson(json.content);
                         var response = new response { action = "getallmess", content = getAllMessage(model) };
                         from.Send(response.ParseToJson());

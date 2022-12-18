@@ -34,7 +34,7 @@
             // 
             // btn_start
             // 
-            this.btn_start.Location = new System.Drawing.Point(29, 13);
+            this.btn_start.Location = new System.Drawing.Point(29, 31);
             this.btn_start.Name = "btn_start";
             this.btn_start.Size = new System.Drawing.Size(75, 23);
             this.btn_start.TabIndex = 0;
@@ -45,8 +45,10 @@
             // listBox
             // 
             this.listBox.FormattingEnabled = true;
+            this.listBox.HorizontalScrollbar = true;
             this.listBox.Location = new System.Drawing.Point(29, 60);
             this.listBox.Name = "listBox";
+            this.listBox.ScrollAlwaysVisible = true;
             this.listBox.Size = new System.Drawing.Size(759, 381);
             this.listBox.TabIndex = 1;
             // 

@@ -27,6 +27,7 @@ namespace ChatAppServer.Model
         public Guid CreatedBy { get; set; }
 
         public DateTime CreatedDate { get; set; }
+        public bool isRead { get; set; }
 
         public virtual ChatUser ChatUser { get; set; }
 

@@ -26,33 +26,67 @@ namespace ChatAppServer
         private readonly UserController userController = new UserController();
         private readonly ChatController chatController = new ChatController();
         private readonly GroupController groupController = new GroupController();
+        private Thread thread;
         public Form1()
         {
             InitializeComponent();
-            serverSocket = new TcpListener(IPAddress.Parse("192.168.103.22"), 2008);
-            serverSocket.Start();
+        }
+        private IPAddress LocalIPAddress()
+        {
+            if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+            {
+                return null;
+            }
+
+            IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+
+            return host
+                .AddressList
+                .FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
         }
 
         private void btn_start_Click(object sender, EventArgs e)
         {
-            new Thread(WaitForConnection) { IsBackground = true }.Start();
-            listBox.Items.Add("Server is running!");
-            var x = new Base { action = "get", model = "user", content = new Login { UserName = "abc@gmail.com", Password = "abc123@" }.ParseToJson() };
-            var y = ParseToJson(x);
-            Console.WriteLine(y);
-            listBox.Items.Add(y);
+            if (btn_start.Text == "Start")
+            {
+                try
+                {
+                    serverSocket = new TcpListener(LocalIPAddress(), 2008);
+                    serverSocket.Start();
+                    thread = new Thread(WaitForConnection) { IsBackground = true };
+                    thread.Start();
+                    listBox.Items.Add(DateTime.Now.ToString() + ":Server is running at : " + LocalIPAddress().ToString() + ":2008!");
+                    btn_start.Text = "Stop";
+                } catch (Exception ex)
+                {
+                    MessageBox.Show("Something went wrong!");
+                }
+                
+            }
+            else
+            {
+                serverSocket.Stop();
+                listBox.Items.Add(DateTime.Now.ToString()+":Server stopped!");
+                btn_start.Text = "Start";
+            }
         }
 
         public void WaitForConnection()
         {
-            while (true)
+            try
             {
-                TcpClient socket = serverSocket.AcceptTcpClient();
-                Worker worker = new Worker(socket);
-                AddWorker(worker);
-                SetText(socket.Client.AddressFamily.ToString() + "is connected!");
-                worker.Start();
+                while (true)
+                {
+                    TcpClient socket = serverSocket.AcceptTcpClient();
+                    Worker worker = new Worker(socket);
+                    AddWorker(worker);
+                    worker.Start();
+                }
+            } catch (Exception ex)
+            {
+                thread.Abort();
             }
+
         }
 
         private void Worker_MessageReceived(object sender, MessageEventArgs e)
@@ -67,7 +101,6 @@ namespace ChatAppServer
 
         private void AddWorker(Worker worker)
         {
-            SetText(worker.Username + "connected!");
             lock (this)
             {
                 workers.Add(worker);
@@ -78,7 +111,7 @@ namespace ChatAppServer
 
         private void RemoveWorker(Worker worker)
         {
-            SetText(worker.Username + "disconnected!");
+            SetText(DateTime.Now.ToString() + worker.Username.ToString() + "disconnected!");
             lock (this)
             {
                 worker.Disconnected -= Worker_Disconnected;
@@ -107,9 +140,9 @@ namespace ChatAppServer
 
         private void HandleMessage(Worker from, String message)
         {
-            SetText(from.Username + " : " + message);
             lock (this)
             {
+                SetText(DateTime.Now.ToString() + from.Username.ToString() + message);
                 var request = JsonSerializer.Deserialize<Base>(message);
                 if (request.model!=null && request.action!=null)
                 {
@@ -117,11 +150,13 @@ namespace ChatAppServer
                     {
                         case "user":
                         {
+                            
                             userController.UserHandler(request, workers, from);
                         }
                             break;
                         case "group":
                             {
+                                Thread.Sleep(1000);
                                 if (!groupController.GroupHandler(request, workers, from).Result)
                                 {
                                     from.Send(new response { action = "Error", content = "Some thing went wrong, please try again later!" }.ParseToJson());

@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using ChapAppClient.DTO;
 using ChatAppServer.DTO;
@@ -177,7 +178,14 @@ namespace ChapAppClient
                     int receivedBytes = stream.Read(buffer, 0, buffer.Length);
                     if (receivedBytes < 1) break;
                     string response = Encoding.UTF8.GetString(buffer, 0, receivedBytes);
-                    handleResponse(response);
+                    Response responsestr = new Response().GetFromJson(response);
+                    if(responsestr.action == "newmess")
+                    {
+                        var request = new Base { action = "getall", model = "group", content = new GetGroupByUser { userID = this.user.UserId }.ParseToJson() };
+                        this.Send(request.ParseToJson());
+                    } 
+                    else
+                        handleResponse(response);
                 }
             }
             catch (IOException)
@@ -258,6 +266,9 @@ namespace ChapAppClient
                         {
                             //var listItem = listGr.Select(x => x.GroupName).ToList();
                             this.homeForm.SetTextToLvGroup(listGr);
+                            var request = new Base { action = "getallmess", model = "chat", content = new GetByGroup { GroupID = listGr.First().GroupId }.ParseToJson() };
+                            this.Send(request.ParseToJson());
+                            this.homeForm.grName = listGr.First().GroupName;
                         }
                     }
                     break;
@@ -266,11 +277,6 @@ namespace ChapAppClient
                         var listMess = new AllMess().GetFromJson(response.content);
                         this.homeForm.addItemForlvChat(listMess);
                     } break;
-                case "newmess":
-                    {
-
-                    }
-                    break;
                 default:
                     break;
             }

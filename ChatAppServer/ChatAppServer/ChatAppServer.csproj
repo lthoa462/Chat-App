@@ -109,6 +109,10 @@
     <Compile Include="Migrations\202212091159557_init.designer.cs">
       <DependentUpon>202212091159557_init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202212181556191_add_new_collum.cs" />
+    <Compile Include="Migrations\202212181556191_add_new_collum.designer.cs">
+      <DependentUpon>202212181556191_add_new_collum.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="DTO\Base.cs" />
     <Compile Include="Model\ChatGroup.cs" />
@@ -128,6 +132,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202212091159557_init.resx">
       <DependentUpon>202212091159557_init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202212181556191_add_new_collum.resx">
+      <DependentUpon>202212181556191_add_new_collum.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

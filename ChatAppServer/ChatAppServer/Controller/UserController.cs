@@ -170,7 +170,6 @@ namespace ChatAppServer.Controller
                         UserId = model.members.ElementAt(0).userId,
                         isApprove = true
                     });
-                    InviteUser(model.members.ElementAt(0));
                     await _context.SaveChangesAsync();
                     return JsonSerializer.Serialize(newGroup);
                 }
@@ -197,18 +196,12 @@ namespace ChatAppServer.Controller
                         isApprove = true
                     });
                     memberNames.Add(user.name);
-                    InviteUser(user);
                 }
                 newGroup.GroupName = String.Join(",", memberNames);
                 _context.ChatGroups.Add(newGroup);
                 await _context.SaveChangesAsync();
                 return JsonSerializer.Serialize(newGroup);
             }
-        }
-
-        private void InviteUser(AddFriendDTO user)
-        {
-
         }
     }
 }
