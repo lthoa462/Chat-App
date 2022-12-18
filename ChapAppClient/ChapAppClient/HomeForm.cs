@@ -147,5 +147,10 @@ namespace ChapAppClient
             var request = new Base { action = "getallmess", model = "chat", content = new GetByGroup { GroupID = groupId }.ParseToJson() };
             this.loginFrom.Send(request.ParseToJson());
         }
-    }
+
+		private void dgvGroups_CellContentClick(object sender, DataGridViewCellEventArgs e)
+		{
+
+		}
+	}
 }
