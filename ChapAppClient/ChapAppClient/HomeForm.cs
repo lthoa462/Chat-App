@@ -50,8 +50,9 @@ namespace ChapAppClient
             }
             else
             {
+                var list = mess.chatMessages.OrderBy(x => x.CreatedDate);
                 dgvMessages.Rows.Clear();
-                foreach(var item in mess.chatMessages)
+                foreach(var item in list)
                 {
                     dgvMessages.Rows.Add(item.sendBy ?? "",item.Content,item.CreatedDate.ToString());
                 }
@@ -129,12 +130,12 @@ namespace ChapAppClient
         private void btAddFriend_Click(object sender, EventArgs e)
         {
             Int32 rowsCount = dgvUsers.SelectedRows.Count;
-            if(rowsCount <= 0)
+            if (rowsCount <= 0)
             {
                 return;
             }
             List<AddFriendDTO> dto = new List<AddFriendDTO>();
-            for(int i = 0;i < rowsCount; i++)
+            for (int i = 0; i < rowsCount; i++)
             {
                 dto.Add(new AddFriendDTO
                 {

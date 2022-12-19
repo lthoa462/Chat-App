@@ -138,7 +138,6 @@
 			this.label3.Size = new System.Drawing.Size(69, 22);
 			this.label3.TabIndex = 8;
 			this.label3.Text = "Server";
-			this.label3.Click += new System.EventHandler(this.label3_Click);
 			// 
 			// pictureBox1
 			// 
@@ -151,7 +150,6 @@
 			this.pictureBox1.Size = new System.Drawing.Size(150, 116);
 			this.pictureBox1.TabIndex = 9;
 			this.pictureBox1.TabStop = false;
-			this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
 			// 
 			// LoginForm
 			// 
