@@ -37,6 +37,7 @@ namespace ChapAppClient
             InitializeComponent();
             this.homeForm = new HomeForm(this);
             this.registerForm = new RegisterForm(this);
+            this.tbServer.Text = "192.168.7.96";
         }
 
         private void btnDangNhap_Click(object sender, EventArgs e)
