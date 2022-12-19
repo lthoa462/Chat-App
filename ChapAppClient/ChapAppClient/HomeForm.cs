@@ -118,12 +118,18 @@ namespace ChapAppClient
 
         private void btSendMessage_Click(object sender, EventArgs e)
         {
-            var messContent = tbMessage.Text;
-            var mess = new ChatMessage { Content = messContent, GroupId = this.loginFrom.listGr.Find(x => x.GroupName == grName).GroupId,sendBy = this.loginFrom.user.UserName, CreatedBy = this.loginFrom.user.UserId, CreatedDate = DateTime.Now, MessageId = Guid.NewGuid() };
-            var request = new Base { action = "send", model = "chat", content = mess.ParseToJson() };
-            this.loginFrom.Send(request.ParseToJson());
-            tbMessage.Text = "";
-            dgvMessages.Rows.Add(this.loginFrom.user.UserName,messContent , DateTime.Now);
+            try
+            {
+                var messContent = tbMessage.Text;
+                var mess = new ChatMessage { Content = messContent, GroupId = this.loginFrom.listGr.Find(x => x.GroupName == grName).GroupId, sendBy = this.loginFrom.user.UserName, CreatedBy = this.loginFrom.user.UserId, CreatedDate = DateTime.Now, MessageId = Guid.NewGuid() };
+                var request = new Base { action = "send", model = "chat", content = mess.ParseToJson() };
+                this.loginFrom.Send(request.ParseToJson());
+                tbMessage.Text = "";
+                dgvMessages.Rows.Add(this.loginFrom.user.UserName, messContent, DateTime.Now);
+            }
+            catch(Exception exception){ 
+            
+            }
         }
 
         private void btAddFriend_Click(object sender, EventArgs e)
