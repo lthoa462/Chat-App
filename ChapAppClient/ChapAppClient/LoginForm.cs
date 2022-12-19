@@ -115,7 +115,7 @@ namespace ChapAppClient
             }
         }
 
-        private void showLoginForm()
+        public void showLoginForm()
         {
             if (this.InvokeRequired)
             {
@@ -128,7 +128,7 @@ namespace ChapAppClient
             }
         }
 
-        private void hideRegisterForm()
+        public void hideRegisterForm()
         {
             if (this.InvokeRequired)
             {

@@ -67,7 +67,8 @@ namespace ChapAppClient
 
         private void btnBackLogin_Click(object sender, EventArgs e)
         {
-            this.Hide();
+            this._loginForm.hideRegisterForm();
+            this._loginForm.showLoginForm();
         }
     }
 }
