@@ -27,6 +27,8 @@ namespace ChapAppClient
             InitializeComponent();
             this.loginFrom = loginForm;
             dgvUsers.AllowUserToAddRows = false;
+            dgvGroups.AllowUserToAddRows = false;
+            dgvMessages.AllowUserToAddRows = false;
         }
 
         public void addItemForFriendListView(string name , Guid userId, string username)
