@@ -183,7 +183,18 @@ namespace ChapAppClient
                     {
                         var request = new Base { action = "getall", model = "group", content = new GetGroupByUser { userID = this.user.UserId }.ParseToJson() };
                         this.Send(request.ParseToJson());
-                    } 
+                    }
+                    if (responsestr.action == "newmess")
+                    {
+                        if (responsestr.content == "Friend already")
+                        {
+                            MessageBox.Show("Friend already");
+                        } else {
+                            var request = new Base { action = "getall", model = "group", content = new GetGroupByUser { userID = this.user.UserId }.ParseToJson() };
+                            this.Send(request.ParseToJson());
+                        }
+                       
+                    }
                     else
                         handleResponse(response);
                 }
@@ -266,9 +277,12 @@ namespace ChapAppClient
                         {
                             //var listItem = listGr.Select(x => x.GroupName).ToList();
                             this.homeForm.SetTextToLvGroup(listGr);
-                            var request = new Base { action = "getallmess", model = "chat", content = new GetByGroup { GroupID = listGr.First().GroupId }.ParseToJson() };
-                            this.Send(request.ParseToJson());
-                            this.homeForm.grName = listGr.First().GroupName;
+                            if (this.homeForm.grName==null || (this.homeForm.grName == null && listGr.First().GroupName == this.homeForm.grName))
+                            {
+                                var request = new Base { action = "getallmess", model = "chat", content = new GetByGroup { GroupID = listGr.First().GroupId }.ParseToJson() };
+                                this.Send(request.ParseToJson());
+                                this.homeForm.grName = listGr.First().GroupName;
+                            }  
                         }
                     }
                     break;

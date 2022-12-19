@@ -65,7 +65,7 @@ namespace ChatAppServer.Controller
                 case "addfriend":
                     {
                         var model = JsonSerializer.Deserialize<AddFriendRequestDTO>(json.content);
-                        var response = new response { action = "getbyname", content = SendAddFriendRequest(model).Result };
+                        var response = new response { action = "getbyname", content = SendAddFriendRequest(model, workers).Result };
                         from.Send(response.ParseToJson());
                         break;
                     }
@@ -139,18 +139,23 @@ namespace ChatAppServer.Controller
             }
         }
 
-        private async Task<string> SendAddFriendRequest(AddFriendRequestDTO model)
+        private async Task<string> SendAddFriendRequest(AddFriendRequestDTO model, List<Worker> wokers)
         {
             if(model.members.Count == 1)
             {
                 var requestUser = await _context.ChatUsers.FirstOrDefaultAsync(u => u.UserId == model.userRequestId);
-                List<GroupUser> groupUsers = await _context.GroupUsers
-                                            .Where(x => x.UserId == model.userRequestId || x.UserId == model.members.ElementAt(0).userId)
-                                            .ToListAsync();
-                if(groupUsers.GroupBy(x => x.GroupId).Any(group => group.Count() == 2)){
-                    return $"{model.members.ElementAt(0).name} is friend already";
-                }else
+                var gruser1 = _context.GroupUsers.Where(x => x.UserId == model.userRequestId).ToList();
+                var userid = model.members[0].userId;
+                var gruser2 = _context.GroupUsers.Where(x => x.UserId == userid).ToList();
+                foreach(var item in gruser1)
                 {
+                    if (gruser2.Any(x=>x.GroupId == item.GroupId))
+                    {
+                            return $"Friend already";
+                    }
+                }
+                //List<GroupUser> GroupUsers = new List<GroupUser>();
+                //if (groupUsers != null) GroupUsers = groupUsers.ToList();
                     ChatGroup newGroup = new ChatGroup();
                     newGroup.GroupId = Guid.NewGuid();
                     newGroup.CreatedBy = model.userRequestId;
@@ -171,8 +176,11 @@ namespace ChatAppServer.Controller
                         isApprove = true
                     });
                     await _context.SaveChangesAsync();
+                    var wokerTarget = wokers.FirstOrDefault(x => x.Username == model.members.ElementAt(0).userId);
+                    var response = new response { action = "newgroup", content = "New group" };
+                    if (wokerTarget != null) wokerTarget.Send(response.ParseToJson());
                     return JsonSerializer.Serialize(newGroup);
-                }
+               
             }else
             {
                 ChatGroup newGroup = new ChatGroup();
@@ -199,6 +207,12 @@ namespace ChatAppServer.Controller
                 }
                 newGroup.GroupName = String.Join(",", memberNames);
                 _context.ChatGroups.Add(newGroup);
+                foreach(var user in model.members)
+                {
+                    var wokerTarget = wokers.FirstOrDefault(x => x.Username == user.userId);
+                    var response = new response { action = "newgroup", content = "New group" };
+                    if (wokerTarget != null) wokerTarget.Send(response.ParseToJson());
+                }
                 await _context.SaveChangesAsync();
                 return JsonSerializer.Serialize(newGroup);
             }
