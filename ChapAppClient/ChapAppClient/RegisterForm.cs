@@ -70,5 +70,6 @@ namespace ChapAppClient
             this._loginForm.hideRegisterForm();
             this._loginForm.showLoginForm();
         }
+
     }
 }

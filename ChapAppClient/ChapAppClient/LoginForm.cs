@@ -31,6 +31,7 @@ namespace ChapAppClient
         private RegisterForm registerForm;
         public ChatUser user;
         public List<ChatGroup> listGr;
+        public Thread signUpThread;
         public LoginForm()
         {
             InitializeComponent();
@@ -71,6 +72,11 @@ namespace ChapAppClient
 
         private void btnDangky_Click(object sender, EventArgs e)
         {
+            this.socket = new TcpClient(tbServer.Text, 2008);
+            this.stream = socket.GetStream();
+            var signUpThread = new Thread(Run);
+            signUpThread.IsBackground = true;
+            signUpThread.Start();
             this.registerForm.Show();
             this.registerForm.StartPosition = FormStartPosition.CenterScreen;
             this.Hide();
