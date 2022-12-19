@@ -112,7 +112,10 @@ namespace ChatAppServer.Controller
 
         private async Task<string> GetUserByName(GetUserByName model)
         {
-            var users = _context.ChatUsers.Where(x => x.Name.Contains(model.Name)).ToList();
+            List<ChatUser> users = new List<ChatUser>();
+            if (!string.IsNullOrEmpty(model.Name))
+                users = _context.ChatUsers.Where(x => x.Name.Contains(model.Name)).ToList();
+            else users = _context.ChatUsers.ToList();
             return JsonSerializer.Serialize(users);
         }
 
@@ -188,7 +191,7 @@ namespace ChatAppServer.Controller
                 newGroup.CreatedBy = model.userRequestId;
                 newGroup.CreatedDate = DateTime.Now;
                 List<string> memberNames = new List<string>();
-
+                memberNames.Add(_context.ChatUsers.First(x => x.UserId == model.userRequestId).UserName);
                 _context.GroupUsers.Add(new GroupUser
                 {
                     GroupId = newGroup.GroupId,
@@ -205,7 +208,7 @@ namespace ChatAppServer.Controller
                     });
                     memberNames.Add(user.name);
                 }
-                newGroup.GroupName = String.Join(",", memberNames);
+                newGroup.GroupName = String.Join(",", memberNames) +$" ({memberNames.Count} members)" ;
                 _context.ChatGroups.Add(newGroup);
                 foreach(var user in model.members)
                 {

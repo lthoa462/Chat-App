@@ -78,10 +78,6 @@ namespace ChapAppClient
 
         private void btSearch_Click(object sender, EventArgs e)
         {
-            if (tbSearchFriend.Text == "")
-            {
-                return;
-            }
             clearItems();
             loginFrom.searchUserByName(tbSearchFriend.Text);
         }
