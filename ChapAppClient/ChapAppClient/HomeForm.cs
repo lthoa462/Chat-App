@@ -21,6 +21,7 @@ namespace ChapAppClient
         private LoginForm loginFrom;
         public string grName;
         public List<Guid> grHaveNewMess = new List<Guid>();
+        public Guid currentGr;
 
         public HomeForm(LoginForm loginForm)
         {
@@ -152,6 +153,7 @@ namespace ChapAppClient
         private void dgvGroups_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             var groupId = (Guid)dgvGroups.Rows[e.RowIndex].Cells[0].Value;
+            currentGr = groupId;
             if (grHaveNewMess != null && grHaveNewMess.Any(x => x == groupId)) grHaveNewMess.Remove(groupId);
             this.grName = dgvGroups.Rows[e.RowIndex].Cells[1].Value.ToString();
             var request = new Base { action = "getallmess", model = "chat", content = new GetByGroup { GroupID = groupId }.ParseToJson() };

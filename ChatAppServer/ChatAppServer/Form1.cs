@@ -142,38 +142,43 @@ namespace ChatAppServer
         {
             lock (this)
             {
-                SetText(DateTime.Now.ToString() + from.Username.ToString() + message);
-                var request = JsonSerializer.Deserialize<Base>(message);
-                if (request.model!=null && request.action!=null)
+                try
                 {
-                    switch (request.model.ToLower())
+                    SetText(DateTime.Now.ToString() + from.Username.ToString() + message);
+                    var request = JsonSerializer.Deserialize<Base>(message);
+                    if (request.model != null && request.action != null)
                     {
-                        case "user":
+                        switch (request.model.ToLower())
                         {
-                            
-                            userController.UserHandler(request, workers, from);
+                            case "user":
+                                {
+
+                                    userController.UserHandler(request, workers, from);
+                                }
+                                break;
+                            case "group":
+                                {
+                                    if (!groupController.GroupHandler(request, workers, from).Result)
+                                    {
+                                        from.Send(new response { action = "Error", content = "Some thing went wrong, please try again later!" }.ParseToJson());
+                                    }
+                                }
+                                break;
+                            case "chat":
+                                {
+                                    if (!chatController.ChatHandler(request, workers, from).Result)
+                                    {
+                                        from.Send(new response { action = "Error", content = "Some thing went wrong, please try again later!" }.ParseToJson());
+                                    }
+                                }
+                                break;
+                            default:
+                                break;
                         }
-                            break;
-                        case "group":
-                            {
-                                Thread.Sleep(1000);
-                                if (!groupController.GroupHandler(request, workers, from).Result)
-                                {
-                                    from.Send(new response { action = "Error", content = "Some thing went wrong, please try again later!" }.ParseToJson());
-                                }
-                            }
-                            break;
-                        case "chat":
-                            {
-                                if (!chatController.ChatHandler(request, workers, from).Result)
-                                {
-                                    from.Send(new response { action = "Error", content = "Some thing went wrong, please try again later!" }.ParseToJson());
-                                }
-                            }
-                            break;
-                    default:
-                            break;
                     }
+                } catch(Exception ex)
+                {
+                    SetText(DateTime.Now + ": Exception: " + ex.Message);
                 }
                 
             }

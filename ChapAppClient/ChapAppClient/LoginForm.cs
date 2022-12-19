@@ -280,13 +280,19 @@ namespace ChapAppClient
                 case "getall":
                     {
                         listGr = new AllGroup().GetFromJson(response.content).list;
-                        if (listGr.Count!=0)
+                        if (listGr.Count!=0 && this.homeForm.currentGr == null)
                         {
                             //var listItem = listGr.Select(x => x.GroupName).ToList();
                             this.homeForm.SetTextToLvGroup(listGr);
                                 var request = new Base { action = "getallmess", model = "chat", content = new GetByGroup { GroupID = listGr.First().GroupId }.ParseToJson() };
                                 this.Send(request.ParseToJson());
                                 this.homeForm.grName = listGr.First().GroupName;
+                        }
+                        else
+                        {
+                            this.homeForm.SetTextToLvGroup(listGr);
+                            var request = new Base { action = "getallmess", model = "chat", content = new GetByGroup { GroupID = this.homeForm.currentGr}.ParseToJson() };
+                            this.Send(request.ParseToJson());
                         }
                     }
                     break;
